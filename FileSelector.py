@@ -2,7 +2,7 @@ import wx
 
 global button_exe
 global frame
-global files
+global path
 
 #####################################################################################
 #  ＧＵＩと処理の呼び出し                                                             #
@@ -10,25 +10,22 @@ global files
 """ファイル指定と判定"""
 class FileDropTarget(wx.FileDropTarget):
 
-    global files
-
     def __init__(self, window):
         wx.FileDropTarget.__init__(self)
         self.window = window
 
     def OnDropFiles(self, x, y, files): # 'files'がファイルパスのリスト
         global button_exe
-        # print(files)
-        
+        global path
         # データ形式判定
         for p in files:
             if 'csv' not in p:
                 wx.MessageBox(u'csv形式ファイルのみ対応しています．', u'ERROR', wx.ICON_ERROR)
             else:
                 self.window.list_entry.SetItems(files)
+                path = files # ファイルパスを処理系に渡す(グローバル変数)
                 button_exe.Enable()
         return 0
-
 
 """GUIと処理の呼び出し"""
 # 基礎
@@ -74,6 +71,7 @@ class IoPanel(wx.Panel):
 
 #ボタン
 class CtrlPanel(wx.Panel):
+
     def __init__(self, parent):
         super().__init__(parent, wx.ID_ANY)
         global button_exe
@@ -98,8 +96,9 @@ class CtrlPanel(wx.Panel):
     # ボタン押下イベント(関数)
     def click_exe(self, event):
         global frame
-        DataOpener
+        global path
         frame.Close()
+        #print(path)
     
     def click_cl(self, event):
         global frame
